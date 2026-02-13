@@ -110,23 +110,24 @@
   transform: translateY(0);
 }
 
-/* Sizes */
+/* Sizes - увеличены для лучшей accessibility */
 .sm {
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
-  min-height: 32px;
+  min-height: 40px;
 }
 
 .md {
   padding: var(--spacing-md) var(--spacing-lg);
   font-size: var(--font-size-base);
-  min-height: 44px;
+  min-height: 48px;
+  /* Минимум 48px для WCAG */
 }
 
 .lg {
   padding: var(--spacing-lg) var(--spacing-xl);
   font-size: var(--font-size-lg);
-  min-height: 52px;
+  min-height: 56px;
 }
 
 .fullWidth {
@@ -156,11 +157,3 @@
     transform: rotate(360deg);
   }
 }
-
-
-
-
-
-
-
-
