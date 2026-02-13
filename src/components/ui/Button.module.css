@@ -12,6 +12,10 @@
   outline: none;
   position: relative;
   overflow: hidden;
+  /* Улучшенная поддержка touch событий на мобильных */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .button:focus-visible {
@@ -152,6 +156,7 @@
     transform: rotate(360deg);
   }
 }
+
 
 
 

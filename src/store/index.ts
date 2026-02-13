@@ -1,18 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Transaction, Category } from '../types';
+import { STORAGE_KEYS } from '../constants';
 
 interface BudgetState {
   transactions: Transaction[];
   categories: Category[];
-  addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
-  updateTransaction: (id: string, transaction: Omit<Transaction, 'id'>) => void;
-  deleteTransaction: (id: string) => void;
-  addCategory: (category: Omit<Category, 'id'>) => void;
-  updateCategory: (id: string, updates: Partial<Category>) => void;
+  addTransaction: (_transaction: Omit<Transaction, 'id'>) => void;
+  updateTransaction: (_id: string, _transaction: Omit<Transaction, 'id'>) => void;
+  deleteTransaction: (_id: string) => void;
+  addCategory: (_category: Omit<Category, 'id'>) => void;
+  updateCategory: (_id: string, _updates: Partial<Category>) => void;
   getBalance: () => number;
-  getTransactionsByType: (type: Transaction['type']) => Transaction[];
-  getTransactionsByDateRange: (start: string, end: string) => Transaction[];
+  getTransactionsByType: (_type: Transaction['type']) => Transaction[];
+  getTransactionsByDateRange: (_start: string, _end: string) => Transaction[];
   clearAllData: () => void;
 }
 
@@ -37,7 +38,7 @@ export const useBudgetStore = create<BudgetState>()(
       addTransaction: (transaction) => {
         const newTransaction: Transaction = {
           ...transaction,
-          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          id: crypto.randomUUID(),
         };
         set((state) => ({
           transactions: [...state.transactions, newTransaction],
@@ -61,7 +62,7 @@ export const useBudgetStore = create<BudgetState>()(
       addCategory: (category) => {
         const newCategory: Category = {
           ...category,
-          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          id: crypto.randomUUID(),
         };
         set((state) => ({
           categories: [...state.categories, newCategory],
@@ -101,7 +102,7 @@ export const useBudgetStore = create<BudgetState>()(
       },
     }),
     {
-      name: 'budget-storage',
+      name: STORAGE_KEYS.BUDGET,
     }
   )
 );

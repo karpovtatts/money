@@ -56,7 +56,22 @@ export function Drawer({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className={styles.backdrop}
-            onClick={onClose}
+            onClick={(e) => {
+              // Закрывать только если клик был именно на backdrop, а не на его потомках
+              if (e.target === e.currentTarget) {
+                onClose();
+              }
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+            }}
+            onTouchEnd={(e) => {
+              // Закрывать только если touch был именно на backdrop, а не на его потомках
+              // На мобильных устройствах события могут всплывать, поэтому проверяем target
+              if (e.target === e.currentTarget) {
+                onClose();
+              }
+            }}
             aria-hidden="true"
           />
           <motion.div
@@ -64,22 +79,22 @@ export function Drawer({
               position === 'bottom'
                 ? { y: '100%' }
                 : position === 'left'
-                ? { x: '-100%' }
-                : { x: '100%' }
+                  ? { x: '-100%' }
+                  : { x: '100%' }
             }
             animate={
               position === 'bottom'
                 ? { y: 0 }
                 : position === 'left'
-                ? { x: 0 }
-                : { x: 0 }
+                  ? { x: 0 }
+                  : { x: 0 }
             }
             exit={
               position === 'bottom'
                 ? { y: '100%' }
                 : position === 'left'
-                ? { x: '-100%' }
-                : { x: '100%' }
+                  ? { x: '-100%' }
+                  : { x: '100%' }
             }
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className={clsx(
@@ -90,6 +105,42 @@ export function Drawer({
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? 'drawer-title' : undefined}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            onTouchStart={(e) => {
+              // Не блокируем события на кнопках и других интерактивных элементах
+              const target = e.target as HTMLElement;
+              const isInteractive = target.tagName === 'BUTTON' ||
+                target.tagName === 'A' ||
+                target.closest('button') !== null ||
+                target.closest('a') !== null;
+              if (!isInteractive) {
+                e.stopPropagation();
+              }
+            }}
+            onTouchMove={(e) => {
+              // Не блокируем движение, если это интерактивный элемент
+              const target = e.target as HTMLElement;
+              const isInteractive = target.tagName === 'BUTTON' ||
+                target.tagName === 'A' ||
+                target.closest('button') !== null ||
+                target.closest('a') !== null;
+              if (!isInteractive) {
+                e.stopPropagation();
+              }
+            }}
+            onTouchEnd={(e) => {
+              // Не блокируем события на кнопках и других интерактивных элементах
+              const target = e.target as HTMLElement;
+              const isInteractive = target.tagName === 'BUTTON' ||
+                target.tagName === 'A' ||
+                target.closest('button') !== null ||
+                target.closest('a') !== null;
+              if (!isInteractive) {
+                e.stopPropagation();
+              }
+            }}
           >
             {title && (
               <div className={styles.header}>
@@ -113,6 +164,7 @@ export function Drawer({
     document.body
   );
 }
+
 
 
 

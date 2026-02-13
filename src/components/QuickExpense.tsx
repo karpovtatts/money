@@ -17,9 +17,12 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
   const [bankBalance, setBankBalance] = useState('');
   const [isApproximate, setIsApproximate] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isProcessingRef = useRef(false);
 
   const trackerBalance = getBalance();
-  const smallExpensesCategory = categories.find((cat) => cat.name === 'Мелкие траты');
+  // Ищем категорию "Мелкие траты", если нет - используем "Другое"
+  const smallExpensesCategory = categories.find((cat) => cat.name === 'Мелкие траты') ||
+    categories.find((cat) => cat.name === 'Другое');
 
   const bankBalanceNum = useMemo(() => {
     const num = parseFloat(bankBalance);
@@ -31,8 +34,12 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
     return trackerBalance - bankBalanceNum;
   }, [trackerBalance, bankBalanceNum]);
 
+
+
   useEffect(() => {
     if (isOpen && inputRef.current) {
+      // Сбрасываем флаг обработки при открытии формы
+      isProcessingRef.current = false;
       // Небольшая задержка для анимации Drawer
       setTimeout(() => {
         inputRef.current?.focus();
@@ -40,35 +47,75 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
     } else {
       setBankBalance('');
       setIsApproximate(false);
+      // Сбрасываем флаг обработки при закрытии формы
+      isProcessingRef.current = false;
     }
   }, [isOpen]);
 
+
   const handleAddDifference = () => {
-    if (!smallExpensesCategory) {
-      toast.error('Категория "Мелкие траты" не найдена');
+    // Защита от двойного вызова - устанавливаем флаг синхронно
+    if (isProcessingRef.current) {
+      return;
+    }
+    // Устанавливаем флаг СРАЗУ, чтобы блокировать повторные вызовы
+    isProcessingRef.current = true;
+
+
+
+    if (difference === null || difference <= 0) {
+
+      isProcessingRef.current = false; // Сбрасываем флаг при раннем выходе
+      toast.error('Разница должна быть положительной');
       return;
     }
 
-    if (difference === null || difference <= 0) {
-      toast.error('Разница должна быть положительной');
+    // Используем найденную категорию "Мелкие траты" или "Другое", или любую другую категорию расходов
+    const categoryToUse = smallExpensesCategory ||
+      categories.find((cat) => cat.name === 'Другое') ||
+      categories.find((cat) => cat.name !== 'Зарплата' && cat.name !== 'Подарки');
+
+    if (!categoryToUse) {
+      isProcessingRef.current = false; // Сбрасываем флаг при раннем выходе
+      toast.error('Не найдена подходящая категория для расходов');
       return;
     }
 
     const newTransaction = {
       type: 'expense' as const,
       amount: difference,
-      category: smallExpensesCategory.name,
+      category: categoryToUse.name,
       date: new Date().toISOString().split('T')[0],
       isApproximate: isApproximate || undefined,
-      comment: isApproximate 
-        ? 'Приблизительная сумма (разница с банком)' 
+      comment: isApproximate
+        ? 'Приблизительная сумма (разница с банком)'
         : 'Разница с балансом в банке',
     };
 
-    // Get the transaction ID after adding
+
+
+    // Проверяем, не была ли уже добавлена такая же транзакция (защита от двойного добавления)
     const stateBefore = useBudgetStore.getState();
+    const existingTransaction = stateBefore.transactions.find(
+      (t) =>
+        t.type === newTransaction.type &&
+        t.amount === newTransaction.amount &&
+        t.category === newTransaction.category &&
+        t.date === newTransaction.date &&
+        // Проверяем, что транзакция была добавлена недавно (за последние 2 секунды)
+        Date.now() - parseInt(t.id.slice(0, 13)) < 2000
+    );
+
+    if (existingTransaction) {
+      isProcessingRef.current = false;
+      return;
+    }
+
+    // Get the transaction ID after adding
     addTransaction(newTransaction);
     const stateAfter = useBudgetStore.getState();
+
+
 
     // Find the newly added transaction
     const newTransactionId = stateAfter.transactions.find(
@@ -79,6 +126,8 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
         t.category === newTransaction.category &&
         t.date === newTransaction.date
     )?.id;
+
+
 
     // Show toast with undo functionality
     if (newTransactionId) {
@@ -98,6 +147,10 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
 
     setBankBalance('');
     setIsApproximate(false);
+    // Сбрасываем флаг обработки после небольшой задержки, чтобы предотвратить двойной вызов
+    setTimeout(() => {
+      isProcessingRef.current = false;
+    }, 500);
     onClose();
   };
 
@@ -149,14 +202,13 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
                 })} ₽
               </span>
             </div>
-            
+
             {difference !== null && (
               <div className={styles.differenceRow}>
                 <span className={styles.differenceLabel}>Разница:</span>
                 <span
-                  className={`${styles.differenceValue} ${
-                    difference > 0 ? styles.differencePositive : styles.differenceNegative
-                  }`}
+                  className={`${styles.differenceValue} ${difference > 0 ? styles.differencePositive : styles.differenceNegative
+                    }`}
                 >
                   {difference > 0 ? '+' : ''}
                   {difference.toLocaleString('ru-RU', {
@@ -222,9 +274,23 @@ export default function QuickExpense({ isOpen, onClose }: QuickExpenseProps) {
           <Button
             type="button"
             variant="expense"
-            onClick={handleAddDifference}
+            onClick={(e) => {
+              // Блокируем событие СРАЗУ, чтобы предотвратить повторную обработку
+              e.preventDefault();
+              e.stopPropagation();
+
+              // Проверяем состояние difference перед выполнением
+              if (difference === null || difference <= 0) {
+                return;
+              }
+
+              handleAddDifference();
+            }}
             fullWidth
-            disabled={difference === null || difference <= 0}
+            style={difference === null || difference <= 0 ? {
+              opacity: 0.6,
+              cursor: 'not-allowed'
+            } : undefined}
           >
             Добавить разницу как трату
           </Button>

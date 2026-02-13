@@ -1,0 +1,11 @@
+# Игнорируемые файлы для Prettier
+node_modules
+dist
+coverage
+*.min.js
+*.min.css
+package-lock.json
+pnpm-lock.yaml
+.cache
+.vscode
+.idea

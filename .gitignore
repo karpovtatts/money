@@ -23,4 +23,17 @@ dist-ssr
 *.sln
 *.sw?
 
+# Environment variables
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
 DEPLOY_LOCAL.md
+.cache
+
