@@ -11,29 +11,13 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  (
-    {
-      label,
-      error,
-      helperText,
-      fullWidth = false,
-      options,
-      className,
-      id,
-      ...props
-    },
-    ref
-  ) => {
+  ({ label, error, helperText, fullWidth = false, options, className, id, ...props }, ref) => {
     const generatedId = useId();
     const selectId = id || generatedId;
 
     return (
       <div
-        className={clsx(
-          styles.wrapper,
-          fullWidth && styles.fullWidth,
-          error && styles.hasError
-        )}
+        className={clsx(styles.wrapper, fullWidth && styles.fullWidth, error && styles.hasError)}
       >
         {label && (
           <label htmlFor={selectId} className={styles.label}>
@@ -46,20 +30,33 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             className={clsx(styles.select, error && styles.selectError, className)}
             aria-invalid={error ? 'true' : 'false'}
-            aria-describedby={error ? `${selectId}-error` : helperText ? `${selectId}-helper` : undefined}
+            aria-describedby={
+              error ? `${selectId}-error` : helperText ? `${selectId}-helper` : undefined
+            }
             {...props}
           >
             {options.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-                disabled={option.disabled}
-              >
+              <option key={option.value} value={option.value} disabled={option.disabled}>
                 {option.label}
               </option>
             ))}
           </select>
-          <span className={styles.arrow} aria-hidden="true">▼</span>
+          <svg
+            className={styles.arrow}
+            aria-hidden="true"
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+          >
+            <path
+              d="M2.5 4.5L6 8L9.5 4.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
         {error && (
           <span id={`${selectId}-error`} className={styles.error} role="alert">
@@ -79,12 +76,3 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
 Select.displayName = 'Select';
 
 export default Select;
-
-
-
-
-
-
-
-
-

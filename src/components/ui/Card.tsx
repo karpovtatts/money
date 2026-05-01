@@ -10,14 +10,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
   (
-    {
-      variant = 'default',
-      padding = 'md',
-      interactive = false,
-      className,
-      children,
-      ...props
-    },
+    { variant = 'default', padding = 'md', interactive = false, className, children, ...props },
     ref
   ) => {
     return (
@@ -41,12 +34,3 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
 Card.displayName = 'Card';
 
 export default Card;
-
-
-
-
-
-
-
-
-

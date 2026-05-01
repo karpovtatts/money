@@ -44,6 +44,8 @@ export default [
       ],
       // Запрет console.log в production
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      // Отключаем базовый no-unused-vars — заменяется TypeScript-версией ниже
+      'no-unused-vars': 'off',
       // TypeScript правила
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',

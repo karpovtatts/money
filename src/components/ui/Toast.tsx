@@ -14,7 +14,7 @@ export interface Toast {
 
 interface ToastProps {
   toast: Toast;
-  onClose: (id: string) => void;
+  onClose: (_id: string) => void;
 }
 
 export function ToastItem({ toast, onClose }: ToastProps) {
@@ -30,10 +30,10 @@ export function ToastItem({ toast, onClose }: ToastProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+      initial={{ opacity: 0, y: -16, scale: 0.94 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ duration: 0.2 }}
+      exit={{ opacity: 0, y: -8, scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
       className={clsx(styles.toast, styles[toast.type || 'success'])}
     >
       <div className={styles.content}>
@@ -52,11 +52,7 @@ export function ToastItem({ toast, onClose }: ToastProps) {
           </Button>
         )}
       </div>
-      <button
-        className={styles.closeButton}
-        onClick={() => onClose(toast.id)}
-        aria-label="Закрыть"
-      >
+      <button className={styles.closeButton} onClick={() => onClose(toast.id)} aria-label="Закрыть">
         ×
       </button>
     </motion.div>
@@ -65,7 +61,7 @@ export function ToastItem({ toast, onClose }: ToastProps) {
 
 interface ToastContainerProps {
   toasts: Toast[];
-  onClose: (id: string) => void;
+  onClose: (_id: string) => void;
 }
 
 export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
@@ -79,12 +75,3 @@ export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-

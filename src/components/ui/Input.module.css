@@ -22,13 +22,13 @@
   font-family: var(--font-family-base);
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
-  border: 2px solid var(--color-border);
-  /* Увеличена толщина для лучшей видимости */
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
   outline: none;
   min-height: 48px;
-  /* Минимум 48px для accessibility */
 }
 
 .input::placeholder {
@@ -69,12 +69,12 @@
 }
 
 .input:hover:not(:disabled) {
-  border-color: var(--color-border);
+  border-color: var(--color-text-muted);
 }
 
 .input:focus {
   border-color: var(--color-border-focus);
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.08);
 }
 
 .input:disabled {
@@ -89,7 +89,7 @@
 
 .inputError:focus {
   border-color: var(--color-error);
-  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
 }
 
 .error {

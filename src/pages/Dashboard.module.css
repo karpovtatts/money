@@ -1,36 +1,50 @@
 .dashboard {
   padding: var(--spacing-lg);
-  padding-bottom: calc(var(--spacing-lg) + 80px); /* Space for bottom nav */
+  padding-bottom: calc(var(--spacing-lg) + 80px);
   max-width: 600px;
   margin: 0 auto;
 }
 
 .title {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-extrabold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-xl);
-  text-align: center;
+  letter-spacing: -0.025em;
+  line-height: var(--line-height-tight);
 }
 
+/* Balance Card */
 .balanceCard {
   margin-bottom: var(--spacing-xl);
-  text-align: center;
+  text-align: left;
+  transition: background var(--transition-slow);
+}
+
+.balanceCardPositive {
+  background: linear-gradient(150deg, var(--color-bg-primary) 50%, var(--color-income-light) 100%);
+}
+
+.balanceCardNegative {
+  background: linear-gradient(150deg, var(--color-bg-primary) 50%, var(--color-expense-light) 100%);
 }
 
 .balanceLabel {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
   margin-bottom: var(--spacing-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
 }
 
 .balanceAmount {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
   line-height: var(--line-height-tight);
+  letter-spacing: -0.03em;
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
 }
 
 .balanceAmount.positive {
@@ -41,14 +55,15 @@
   color: var(--color-expense);
 }
 
+/* Quick Actions */
 .quickActions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-xl);
 }
 
 .actionButton {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,20 +77,61 @@
   line-height: 1;
 }
 
+/* Quick Expense */
+.quickExpenseSection {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.quickExpenseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  border: 1.5px dashed var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.quickExpenseButton:hover {
+  border-color: var(--color-text-muted);
+  border-style: solid;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.quickExpenseIcon {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+}
+
+.quickExpenseHint {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: var(--line-height-normal);
+}
+
+/* Quick Presets */
 .quickPresets {
   margin-top: var(--spacing-xl);
 }
 
 .quickPresetsTitle {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  color: var(--color-text-muted);
   margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .presetsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
   gap: var(--spacing-md);
 }
 
@@ -87,22 +143,25 @@
   gap: var(--spacing-xs);
   padding: var(--spacing-md);
   background-color: var(--color-bg-primary);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  min-height: 100px;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 96px;
 }
 
 .presetButton:hover {
-  border-color: var(--category-color);
+  border-color: var(--category-color, var(--color-text-muted));
   background-color: var(--color-bg-secondary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-2);
 }
 
 .presetButton:active {
-  transform: translateY(0);
+  transform: scale(0.96);
 }
 
 .presetIcon {
@@ -111,12 +170,32 @@
 }
 
 .presetLabel {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
   text-align: center;
+  line-height: var(--line-height-tight);
 }
 
+/* Charts */
+.chartSection {
+  margin-top: var(--spacing-xl);
+}
+
+.chartCard {
+  margin-bottom: var(--spacing-lg);
+}
+
+.chartTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Mobile */
 @media (max-width: 640px) {
   .dashboard {
     padding: var(--spacing-md);
@@ -129,11 +208,11 @@
   }
 
   .balanceAmount {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
   }
 
   .quickActions {
-    flex-direction: column;
+    gap: var(--spacing-sm);
   }
 
   .presetsGrid {
@@ -150,58 +229,3 @@
     font-size: var(--font-size-xl);
   }
 }
-
-.chartSection {
-  margin-top: var(--spacing-xl);
-}
-
-.chartCard {
-  margin-bottom: var(--spacing-lg);
-}
-
-.chartTitle {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-md);
-  text-align: center;
-}
-
-.quickExpenseSection {
-  margin-top: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.quickExpenseButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  border: 2px dashed var(--color-border);
-  background: var(--color-surface-variant);
-}
-
-.quickExpenseButton:hover {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
-
-.quickExpenseIcon {
-  font-size: var(--font-size-lg);
-}
-
-.quickExpenseHint {
-  margin-top: var(--spacing-sm);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  text-align: center;
-  line-height: 1.4;
-}
-
-
-
-
-

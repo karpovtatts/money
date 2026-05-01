@@ -10,28 +10,13 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      label,
-      error,
-      helperText,
-      fullWidth = false,
-      className,
-      id,
-      ...props
-    },
-    ref
-  ) => {
+  ({ label, error, helperText, fullWidth = false, className, id, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id || generatedId;
 
     return (
       <div
-        className={clsx(
-          styles.wrapper,
-          fullWidth && styles.fullWidth,
-          error && styles.hasError
-        )}
+        className={clsx(styles.wrapper, fullWidth && styles.fullWidth, error && styles.hasError)}
       >
         {label && (
           <label htmlFor={inputId} className={styles.label}>
@@ -43,7 +28,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           className={clsx(styles.input, error && styles.inputError, className)}
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
+          aria-describedby={
+            error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
+          }
           {...props}
         />
         {error && (
@@ -64,12 +51,3 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = 'Input';
 
 export default Input;
-
-
-
-
-
-
-
-
-

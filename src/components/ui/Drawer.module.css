@@ -5,6 +5,8 @@
   right: 0;
   bottom: 0;
   background-color: var(--color-bg-overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: var(--z-modal-backdrop);
 }
 
@@ -24,9 +26,21 @@
   bottom: 0;
   left: 0;
   right: 0;
-  border-top-left-radius: var(--radius-xl);
-  border-top-right-radius: var(--radius-xl);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
   max-height: 90vh;
+}
+
+.bottom::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
 }
 
 .left {
@@ -134,12 +148,3 @@
     padding: var(--spacing-md);
   }
 }
-
-
-
-
-
-
-
-
-

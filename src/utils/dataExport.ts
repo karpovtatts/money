@@ -52,7 +52,7 @@ export function downloadFile(content: string, filename: string, mimeType: string
 export function importFromJSON(jsonString: string): ExportData | null {
   try {
     const data = JSON.parse(jsonString) as ExportData;
-    
+
     // Validate structure
     if (!data.transactions || !data.categories) {
       throw new Error('Invalid data structure');
@@ -64,12 +64,3 @@ export function importFromJSON(jsonString: string): ExportData | null {
     return null;
   }
 }
-
-
-
-
-
-
-
-
-

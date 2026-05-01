@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, CSSProperties } from 'react';
 import { motion } from 'framer-motion';
 import { useBudgetStore } from '../store';
 import TransactionFormNew from '../components/TransactionFormNew';
@@ -110,7 +110,7 @@ export default function Dashboard() {
       runningBalance += t.type === 'income' ? t.amount : -t.amount;
       const date = new Date(t.date);
       const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD
-      
+
       // Сохраняем баланс на конец каждого дня
       balanceMap.set(dateKey, runningBalance);
     });
@@ -168,7 +168,11 @@ export default function Dashboard() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        <Card variant="elevated" padding="lg" className={styles.balanceCard}>
+        <Card
+          variant="elevated"
+          padding="lg"
+          className={`${styles.balanceCard} ${balance >= 0 ? styles.balanceCardPositive : styles.balanceCardNegative}`}
+        >
           <div className={styles.balanceLabel}>Текущий баланс</div>
           <div
             className={`${styles.balanceAmount} ${
@@ -248,7 +252,7 @@ export default function Dashboard() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleQuickPreset(category.name, isIncome ? 'income' : 'expense')}
                   className={styles.presetButton}
-                  style={{ '--category-color': category.color } as React.CSSProperties}
+                  style={{ '--category-color': category.color } as CSSProperties}
                 >
                   <span className={styles.presetIcon}>{category.icon}</span>
                   <span className={styles.presetLabel}>{category.name}</span>
@@ -276,9 +280,7 @@ export default function Dashboard() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -287,11 +289,7 @@ export default function Dashboard() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip
-                  formatter={(value: number) =>
-                    `${value.toLocaleString('ru-RU')} ₽`
-                  }
-                />
+                <Tooltip formatter={(value: number) => `${value.toLocaleString('ru-RU')} ₽`} />
               </PieChart>
             </ResponsiveContainer>
           </Card>
@@ -313,11 +311,7 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip
-                  formatter={(value: number) =>
-                    `${value.toLocaleString('ru-RU')} ₽`
-                  }
-                />
+                <Tooltip formatter={(value: number) => `${value.toLocaleString('ru-RU')} ₽`} />
                 <Legend />
                 <Bar dataKey="Доходы" fill="#4CAF50" />
                 <Bar dataKey="Расходы" fill="#F44336" />
@@ -342,11 +336,7 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip
-                  formatter={(value: number) =>
-                    `${value.toLocaleString('ru-RU')} ₽`
-                  }
-                />
+                <Tooltip formatter={(value: number) => `${value.toLocaleString('ru-RU')} ₽`} />
                 <Line
                   type="monotone"
                   dataKey="Баланс"
@@ -368,10 +358,7 @@ export default function Dashboard() {
         initialCategory={initialCategory}
       />
 
-      <QuickExpense
-        isOpen={showQuickExpense}
-        onClose={() => setShowQuickExpense(false)}
-      />
+      <QuickExpense isOpen={showQuickExpense} onClose={() => setShowQuickExpense(false)} />
     </div>
   );
 }

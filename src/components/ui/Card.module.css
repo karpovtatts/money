@@ -1,12 +1,14 @@
 .card {
   background-color: var(--color-bg-primary);
-  border-radius: var(--radius-lg);
-  /* Четкие тени вместо гласморфизма - лучше для СДВГ */
+  border-radius: var(--radius-xl);
   border: 1px solid var(--color-border-light);
-  transition: all var(--transition-base);
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-base),
+    background var(--transition-slow);
 }
 
-/* Варианты elevation */
+/* Variants */
 .default {
   box-shadow: var(--elevation-1);
 }
@@ -16,7 +18,7 @@
 }
 
 .outlined {
-  border: 2px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
   box-shadow: none;
 }
 
@@ -37,24 +39,22 @@
   padding: var(--spacing-xl);
 }
 
-/* Interactive - четкие hover эффекты */
+/* Interactive */
 .interactive {
   cursor: pointer;
 }
 
 .interactive:hover {
-  transform: translateY(-2px);
   box-shadow: var(--elevation-3);
   border-color: var(--color-border);
 }
 
 .interactive:active {
-  transform: translateY(0);
+  transform: scale(0.99);
   box-shadow: var(--elevation-1);
 }
 
-/* Focus для accessibility */
 .interactive:focus-visible {
-  outline: 3px solid var(--color-border-focus);
+  outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }

@@ -6,7 +6,7 @@ interface LogEntry {
   timestamp: number;
   location: string;
   message: string;
-  data?: any;
+  data?: unknown;
   sessionId?: string;
   runId?: string;
   hypothesisId?: string;
@@ -42,7 +42,7 @@ export function debugLog(entry: Omit<LogEntry, 'timestamp'>) {
     localStorage.setItem(DEBUG_LOG_KEY, JSON.stringify(existingLogs));
   } catch (error) {
     // Если localStorage переполнен или недоступен, просто игнорируем
-     
+
     console.error('Failed to save debug log:', error);
   }
 }
@@ -53,7 +53,6 @@ export function getLogs(): LogEntry[] {
     if (!logsStr) return [];
     return JSON.parse(logsStr);
   } catch (error) {
-     
     console.error('Failed to read debug logs:', error);
     return [];
   }
@@ -63,7 +62,6 @@ export function clearLogs() {
   try {
     localStorage.removeItem(DEBUG_LOG_KEY);
   } catch (error) {
-     
     console.error('Failed to clear debug logs:', error);
   }
 }
@@ -77,5 +75,3 @@ export function exportLogsAsText(): string {
     })
     .join('\n\n');
 }
-
-

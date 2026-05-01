@@ -20,10 +20,7 @@ export function applyTheme(theme: Theme) {
   // Also update meta theme-color for mobile browsers
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
   if (metaThemeColor) {
-    metaThemeColor.setAttribute(
-      'content',
-      actualTheme === 'dark' ? '#1a1a1a' : '#ffffff'
-    );
+    metaThemeColor.setAttribute('content', actualTheme === 'dark' ? '#1a1a1a' : '#ffffff');
   }
 }
 
@@ -51,12 +48,3 @@ if (typeof window !== 'undefined') {
     }
   });
 }
-
-
-
-
-
-
-
-
-
